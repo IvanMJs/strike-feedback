@@ -5,8 +5,8 @@ services:
     region: oregon
     plan: free
     rootDir: api
-    buildCommand: npm ci && npm run build
-    startCommand: npx prisma generate && npx prisma migrate deploy && npx prisma db seed && npm start
+    buildCommand: cp .env.build .env && npm ci && npm run build && rm .env
+    startCommand: npx prisma migrate deploy && npx prisma db seed && npm start
     healthCheckPath: /health
     dependsOn:
       - strike-feedback-db
