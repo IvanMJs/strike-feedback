@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: strike-feedback-api
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: strike-feedback-db
+          property: connectionString
+      - key: FRONTEND_URL
+        value: https://strike-feedback.vercel.app
+
+databases:
+  - name: strike-feedback-db
+    databaseName: strike_feedback
+    user: strike_user
+    plan: free

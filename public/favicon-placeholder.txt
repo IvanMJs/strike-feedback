@@ -1,0 +1,9 @@
+<!-- 
+Este archivo es un placeholder para favicon.ico
+Para generar el archivo .ico real, puedes usar:
+1. https://favicon.io/favicon-converter/ (convierte SVG a ICO)
+2. https://realfavicongenerator.net/ (generador completo)
+3. O usar el SVG que funciona en navegadores modernos
+
+El SVG en /public/favicon.svg funcionará en la mayoría de navegadores modernos.
+-->

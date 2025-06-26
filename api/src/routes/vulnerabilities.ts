@@ -52,10 +52,11 @@ router.get("/", async (req, res, next) => {
     const where: Prisma.VulnerabilityWhereInput = {}
 
     if (query.search) {
+      // Simple contains search for SQLite compatibility
       where.OR = [
-        { title: { contains: query.search, mode: "insensitive" } },
-        { description: { contains: query.search, mode: "insensitive" } },
-        { cwe: { contains: query.search, mode: "insensitive" } },
+        { title: { contains: query.search } },
+        { description: { contains: query.search } },
+        { cwe: { contains: query.search } },
       ]
     }
 
