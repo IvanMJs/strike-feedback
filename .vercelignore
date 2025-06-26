@@ -1,0 +1,7 @@
+# Ignore the API backend directory
+api/
+
+# Ignore other unnecessary files
+.env.local
+.env
+*.log
