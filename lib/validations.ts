@@ -6,11 +6,11 @@ export const vulnerabilitySchema = z.object({
   severity: z.enum(["CRITICAL", "HIGH", "MEDIUM", "LOW"]),
   cwe: z.string().optional(),
   cvssScore: z.number().min(0, "CVSS Score must be at least 0").max(10, "CVSS Score must be at most 10"),
-  affectedSystems: z.array(z.string()),
+  affectedSystems: z.array(z.string()).optional().default([]),
   suggestedFix: z.string().optional(),
   reporter: z.string().optional(),
   assignee: z.string().optional(),
-  status: z.enum(["PENDING_FIX", "IN_PROGRESS", "SOLVED", "FALSE_POSITIVE"]),
+  status: z.enum(["PENDING_FIX", "IN_PROGRESS", "SOLVED", "FALSE_POSITIVE"]).optional().default("PENDING_FIX"),
 })
 
 export const vulnerabilityUpdateSchema = vulnerabilitySchema.partial()
