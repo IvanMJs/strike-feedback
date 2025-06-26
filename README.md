@@ -2,6 +2,11 @@
 
 A modern vulnerability management system built with Next.js, designed to follow real-world UI/UX patterns from products like Jira and Trello.
 
+## 🚀 Live Demo
+
+- **Frontend**: [https://strike-feedback.vercel.app](https://strike-feedback.vercel.app) (Deployed on Vercel)
+- **Backend API**: [https://strike-feedback.onrender.com](https://strike-feedback.onrender.com) (Deployed on Render)
+
 ## Features
 
 - 🔒 **Vulnerability Management**: Create, edit, delete, and track security vulnerabilities
@@ -10,6 +15,7 @@ A modern vulnerability management system built with Next.js, designed to follow 
 - 🚀 **Modern UI/UX**: Modal-based creation, card interface, and responsive design
 - ⚡ **Optimistic Updates**: Instant UI feedback with React Query
 - 🎨 **Professional Design**: Built with shadcn/ui and Tailwind CSS
+- 🌐 **Production Ready**: Deployed with professional CI/CD pipeline
 
 ## Tech Stack
 
@@ -21,35 +27,72 @@ A modern vulnerability management system built with Next.js, designed to follow 
 - **shadcn/ui** - Modern UI components built on Radix UI
 - **Tailwind CSS** - Utility-first CSS framework
 - **Zod** - Schema validation
+- **Vercel** - Deployment platform
 
 ### Backend
 - **Express.js** - Node.js web framework
 - **Prisma** - Type-safe ORM for database operations
-- **SQLite** - Lightweight database for development
+- **PostgreSQL** - Production database (Render managed)
 - **TypeScript** - Full-stack type safety
+- **Render** - Deployment platform
+
+## Architecture
+
+```
+┌─────────────────┐    HTTP/REST API    ┌─────────────────┐
+│   Frontend      │ ◄─────────────────► │    Backend      │
+│   (Vercel)      │                     │   (Render)      │
+│                 │                     │                 │
+│ • Next.js 14    │                     │ • Express.js    │
+│ • React Query   │                     │ • Prisma ORM    │
+│ • shadcn/ui     │                     │ • PostgreSQL    │
+└─────────────────┘                     └─────────────────┘
+```
 
 ## Getting Started
 
-### Prerequisites
+### Quick Start (Using Live Demo)
+Simply visit [https://strike-feedback.vercel.app](https://strike-feedback.vercel.app) to use the live application.
+
+### Local Development
+
+#### Prerequisites
 - Node.js 18+ 
 - npm or yarn
+- PostgreSQL (for production-like setup) or SQLite (for quick development)
 
-### Installation
+#### Installation
 
 1. **Clone and install dependencies:**
 ```bash
-git clone <repository-url>
+git clone https://github.com/IvanMJs/strike-feedback.git
 cd strike-feedback
 npm install
 ```
 
-2. **Set up the database:**
+2. **Set up environment variables:**
+```bash
+# Copy environment example
+cp .env.local.example .env.local
+
+# Edit .env.local with your API URL
+# For local development:
+NEXT_PUBLIC_API_URL=http://localhost:3001
+
+# For production:
+NEXT_PUBLIC_API_URL=https://strike-feedback.onrender.com
+```
+
+3. **Set up the backend:**
 ```bash
 # Navigate to the API directory
 cd api
 
 # Install API dependencies
 npm install
+
+# Set up database URL in api/.env
+echo "DATABASE_URL=your-database-url-here" > .env
 
 # Generate Prisma client and run migrations
 npx prisma generate
@@ -59,14 +102,16 @@ npx prisma db push
 npm run seed
 ```
 
-3. **Start the backend server:**
+4. **Start the development servers:**
+
+**Backend (Terminal 1):**
 ```bash
-# From the api directory
+cd api
 npm run dev
 ```
 The API will be available at `http://localhost:3001`
 
-4. **Start the frontend development server:**
+**Frontend (Terminal 2):**
 ```bash
 # From the root directory
 npm run dev
@@ -113,28 +158,117 @@ Uses React Query for:
 - Optimistic updates for better UX
 - Automatic cache invalidation after mutations
 
+## API Endpoints
+
+The backend API provides the following endpoints:
+
+### Vulnerabilities
+- `GET /api/vulnerabilities` - List all vulnerabilities with filtering and pagination
+- `POST /api/vulnerabilities` - Create a new vulnerability
+- `PUT /api/vulnerabilities/:id` - Update an existing vulnerability
+- `DELETE /api/vulnerabilities/:id` - Delete a vulnerability
+
+### Query Parameters (GET /api/vulnerabilities)
+- `search` - Search in title and description
+- `status` - Filter by status (PENDING_FIX, IN_PROGRESS, SOLVED, FALSE_POSITIVE)
+- `severity` - Filter by severity (CRITICAL, HIGH, MEDIUM, LOW)
+- `page` - Page number (default: 1)
+- `limit` - Items per page (default: 10, max: 100)
+
+### Example API Usage
+```bash
+# Get all vulnerabilities
+curl https://strike-feedback.onrender.com/api/vulnerabilities
+
+# Search vulnerabilities
+curl "https://strike-feedback.onrender.com/api/vulnerabilities?search=XSS&severity=HIGH"
+
+# Get specific vulnerability
+curl https://strike-feedback.onrender.com/api/vulnerabilities/[id]
+```
+
+## Key Features Explained
+
+### Real-World UI/UX Patterns
+- **Modal-based creation** - Following Jira/Trello patterns for better workflow
+- **Card-based interface** - Easy to scan and manage multiple vulnerabilities
+- **Instant feedback** - Optimistic updates provide immediate visual response
+- **Professional design** - Clean, modern interface suitable for enterprise use
+
+### Smart CWE Integration
+- **Searchable database** - Find CWEs by name, code, or description
+- **Common vulnerabilities** - Pre-populated with 50+ most common CWEs
+- **Custom entries** - Support for unlisted or internal vulnerability types
+- **Rich descriptions** - Helpful context for each CWE type
+
+### Production Features
+- **Type safety** - Full TypeScript coverage from database to UI
+- **Validation** - Comprehensive input validation with Zod schemas
+- **Error handling** - Graceful error states and user feedback
+- **Responsive design** - Works seamlessly on desktop and mobile
+- **Performance optimized** - Built-in caching and optimizations
+
+## Deployment
+
+### Frontend (Vercel)
+The frontend is automatically deployed to Vercel on every push to the main branch.
+
+**Environment Variables Required:**
+- `NEXT_PUBLIC_API_URL=https://strike-feedback.onrender.com`
+
+### Backend (Render)
+The backend is deployed on Render with a managed PostgreSQL database.
+
+**Environment Variables Required:**
+- `DATABASE_URL` - PostgreSQL connection string (auto-configured by Render)
+- `NODE_ENV=production`
+
+### Manual Deployment
+
+**Frontend:**
+```bash
+# Deploy to Vercel
+npm run build
+npx vercel --prod
+```
+
+**Backend:**
+```bash
+cd api
+# Build and deploy to Render
+npm run build
+# Render auto-deploys from GitHub
+```
+
 ## Development
 
 ### Available Scripts
 
-**Frontend:**
+**Frontend (Root Directory):**
 - `npm run dev` - Start development server
-- `npm run build` - Build for production
+- `npm run build` - Build for production  
 - `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run type-check` - Run TypeScript compiler check
 
-**Backend (from /api directory):**
+**Backend (api/ Directory):**
 - `npm run dev` - Start development server with hot reload
 - `npm run build` - Build TypeScript
+- `npm run start` - Start production server
 - `npm run seed` - Seed database with sample data
 
 ### Database Management
 
 ```bash
 # Generate Prisma client after schema changes
+cd api
 npx prisma generate
 
 # Push schema changes to database
 npx prisma db push
+
+# Run migrations (production)
+npx prisma migrate deploy
 
 # Open Prisma Studio to view/edit data
 npx prisma studio
@@ -148,6 +282,37 @@ npx prisma studio
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+## Screenshots
+
+### Dashboard View
+The main dashboard provides an overview of all vulnerabilities with filtering and search capabilities.
+
+### Vulnerability Creation
+Modal-based creation form with smart CWE selection and comprehensive validation.
+
+### Real-time Updates
+Changes are reflected immediately across the interface with optimistic updates.
+
+## Roadmap
+
+- [ ] **User Authentication** - Multi-user support with role-based access
+- [ ] **Notifications** - Email/Slack integration for vulnerability updates
+- [ ] **Export Features** - PDF/CSV export capabilities
+- [ ] **Advanced Analytics** - Trends, reports, and security metrics
+- [ ] **Integrations** - GitHub, Jira, and security scanner integrations
+- [ ] **Comments System** - Collaborative discussion on vulnerabilities
+
+## Support
+
+For questions, issues, or contributions:
+- Create an issue on GitHub
+- Check the live demo at [strike-feedback.vercel.app](https://strike-feedback.vercel.app)
+- Review the API documentation at [strike-feedback.onrender.com](https://strike-feedback.onrender.com)
+
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+**Built with ❤️ using modern web technologies for professional vulnerability management.**
