@@ -4,8 +4,9 @@ services:
     env: node
     region: oregon
     plan: free
-    buildCommand: npm install && npx prisma generate && npm run build
-    startCommand: npm start
+    rootDir: api
+    buildCommand: npm ci && npx prisma generate && npm run build
+    startCommand: npx prisma migrate deploy && npm start
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
@@ -21,4 +22,5 @@ databases:
   - name: strike-feedback-db
     databaseName: strike_feedback
     user: strike_user
+    region: oregon
     plan: free
