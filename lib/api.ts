@@ -70,7 +70,7 @@ export const vulnerabilityApi = {
 
   async updateVulnerability(id: string, data: Partial<Vulnerability>): Promise<Vulnerability> {
     // Transform frontend data to API format
-    const apiData: any = { ...data }
+    const apiData: Record<string, unknown> = { ...data }
     if (data.severity) {
       apiData.severity = data.severity.toUpperCase()
     }
@@ -103,6 +103,18 @@ export const vulnerabilityApi = {
       high: number
     }
   }> {
-    return fetchApi<any>("/vulnerabilities/stats/summary")
+    return fetchApi<{
+      total: number
+      byStatus: {
+        pendingFix: number
+        inProgress: number
+        solved: number
+        falsePositive: number
+      }
+      bySeverity: {
+        critical: number
+        high: number
+      }
+    }>("/vulnerabilities/stats/summary")
   },
 }
