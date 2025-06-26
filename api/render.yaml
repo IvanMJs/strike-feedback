@@ -6,7 +6,7 @@ services:
     plan: free
     rootDir: api
     buildCommand: cp .env.build .env && npm ci && npm run build && rm .env
-    startCommand: npx prisma migrate deploy && npx prisma db seed && npm start
+    startCommand: echo "DATABASE_URL is $DATABASE_URL" && DATABASE_URL=$DATABASE_URL npx prisma migrate deploy && DATABASE_URL=$DATABASE_URL npx prisma db seed && npm start
     healthCheckPath: /health
     dependsOn:
       - strike-feedback-db
